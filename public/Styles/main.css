@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Biryani:wght@200&family=Roboto:wght@300&display=swap');
+
+:root{
+    --text-principal: 'Biryani', sans-serif;
+    --text-secundario: 'Roboto', sans-serif;
+}

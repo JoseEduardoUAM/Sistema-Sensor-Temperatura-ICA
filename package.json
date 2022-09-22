@@ -1,0 +1,24 @@
+{
+  "name": "servidor-temperatura",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "cross-env NODE_ENV=produccion node ./src/main",
+    "dev": "cross-env NODE_ENV=desarrollo node ./src/main"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "chart.js": "^3.9.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.2",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "mariadb": "^3.0.1",
+    "socket.io": "^4.5.2",
+    "sweetalert2": "^11.4.33"
+  }
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadisticas</title>
+</head>
+
+<body>
+    <h1>Estadisticas</h1>
+
+    <h2>Datos</h2>
+
+    <canvas id="GraficaTemperatura" height="100px"></canvas>
+    <canvas id="GraficaAire" height="100px"></canvas>
+
+
+
+    <div id="Informacion">
+    </div>
+
+</body>
+
+<script src="/socket.io/socket.io.js" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const socket = io()
+
+    let Informacion = document.getElementById('Informacion')
+
+    socket.on('mostrarDatos', (datos) => {
+        let p = document.createElement("p")
+        p.innerText = JSON.stringify(datos)
+        Informacion.appendChild(p)
+        let fecha = new Date().toDateString()
+        labels.push(fecha)
+        data1.datasets[0].data.push(datos.tem)
+        data1.datasets[1].data.push(0)
+        data.datasets[0].data.push( { x : datos.posx , y : datos.posy , r : 10 } )
+        GraficaTemperatura.update();
+        GraficaAire.update();
+    })
+
+    /*Grafica de Lineas*/
+    var labels = [];
+
+    var data1 = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Temperatura Nodo 1',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [],
+            },
+            {
+                label: 'Temperatura Nodo 2',
+                backgroundColor: 'rgb(72, 137, 216)',
+                borderColor: 'rgb(148, 181, 222)',
+                data: [],
+            }
+        ]
+    };
+
+    const config1 = { type: 'line', data: data1 };
+
+    const GraficaTemperatura = new Chart(
+        document.getElementById('GraficaTemperatura'),
+        config1
+    )
+
+    /*Grafica de burbuja*/
+
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Sensor 1',
+                data: [],
+                backgroundColor: 'rgba(181, 143, 218 , 0.47)'
+            }
+        ]
+    };
+
+    const config = {
+        type: 'bubble',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Grafica de Indice de Calidad del Aire'
+                }
+            }
+        },
+    };
+
+
+    const GraficaAire = new Chart(
+        document.getElementById('GraficaAire'),
+        config
+    )
+
+</script>
+
+</html>

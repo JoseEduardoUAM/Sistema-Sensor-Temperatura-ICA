@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SensorUAM</title>
+    <link rel="shortcut icon" href="/Imagenes/icono.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/Styles/main.css">
+    <link rel="stylesheet" href="/Styles/header.css">
+    <link rel="stylesheet" href="/Styles/index.css">
+
+</head>
+
+<body>
+
+    <%-include('Components/nav.ejs')%>
+        <!-- Contenedor 1 --------------------------------------------- -->
+        <div class="Contenedor contenedor_1">
+            <div class="contendor_contenedor_texto">
+                <h1>Taller de desarrollo de Aplicaciones Web</h1>
+                <h2>Sistema de monitoreo de espacios publicos de la UAM Azcapotzalco</h2>
+            </div>
+            <div class="Contenedor_contenedor_img">
+                <img src="/Imagenes/Ilustracion.svg" class="imagen_derecha show_derecha" loading="lazy">
+            </div>
+            <img src="/Imagenes/Vector1.svg" class="wave">
+        </div>
+        <!-- Contenedor 2 Resumen -->
+        <div class="Contenedor Resumen">
+            <div class="Contenedor_contenedor_img">
+                <img src="/Imagenes/Covid19.svg" class="imagen_izquierda show_izquierda" loading="lazy">
+            </div>
+            <div class="contendor_contenedor_texto">
+                <h3>Resumen</h3>
+                <p>Durante la pandemia generada por el covid 19, la secretaria de salud implemento medidas sanitarias
+                    para prevenir los contagios en la población, por ejemplo: mantener la sana distancia, mantener los
+                    espacios que se encuentran cerrados ventilados, utilizar cubre bocas entre otras medidas. <br><br>
+                    Al retornar las actividades de manera presencial, la Universidad Autónoma Metropolitana Unidad
+                    Azcapotzalco desea conocer el estado de la temperatura y el índice de calidad del aire de los
+                    espacios públicos de cada edificio
+                </p>
+            </div>
+        </div>
+        <!-- Contenedor 3 Objetivos -->
+        <div class="Contenedor Objetivos">
+            <div class="contendor_contenedor_texto">
+                <h3>Objetivos</h3>
+                <p>
+                    - Crear una interfaz gráfica que permita observar la temperatura y el índice de la calidad del aire
+                    de los espacios públicos de la UAM Azcapotzalco.<br><br>
+                    - Crear una interfaz gráfica que permita mostrar los espacios públicos que se pueden monitorear en
+                    la UAM Azcapotzalco y que permita agregar nuevos espacios para monitorear.<br>
+                </p>
+            </div>
+            <div class="Contenedor_contenedor_img">
+                <img src="/Imagenes/Graficas.svg" class="imagen_derecha show_derecha" loading="lazy">
+            </div>
+        </div>
+        <div class="Contenedor Objetivos">
+            <div class="Contenedor_contenedor_img">
+                <img src="/Imagenes/Modelo-Cliente-Servidor.svg" class="imagen_izquierda show_izquierda" loading="lazy">
+            </div>
+            <div class="contendor_contenedor_texto">
+                <h3></h3>
+                <p>
+                    - Crear un servidor que permita proporcionar conexiones bidireccionales y enviar datos en tiempo
+                    real.<br><br>
+                    - Crear un servidor web que permita transmitir la información de Espacios públicos, nodos
+                    (sensores), Lecturas de sensores, encargados y departamentos de UAM Azcapotzalco.<br><br>
+                    - Generar una base de datos que permita almacenar la información del sistema
+                </p>
+            </div>
+        </div>
+        <!-- Contenedor 4 Tecnologias -->
+        <div class="Seccion seccion_1">
+            <h2>Tecnologias Utilizadas</h2>
+            <div>
+                <div>
+                    <div class="tarjeta">
+                        <img src="/Imagenes/nodejs.png" class="imagen_centro show_centro" loading="lazy">
+                        <h3>Node JS</h3>
+                        <p>Es un entorno en tiempo de ejecución multiplataforma, de código abierto, para la capa del servidor
+                            basado en el lenguaje de programación JavaScript.
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <div class="tarjeta">
+                        <img src="/Imagenes/mariadb.png" class="imagen_centro show_centro" loading="lazy">
+                        <h3>MariaDB</h3>
+                        <p>
+                            Es un sistema de gestión de bases de datos derivado de MySQL con licencia GPL.
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <div class="tarjeta">
+                        <img src="/Imagenes/JavaScript.png" class="imagen_centro show_centro" loading="lazy">
+                        <h3>JavaScript</h3>
+                        <p>
+                            Es un lenguaje de programación interpretado. Se define como orientado a objetos, basado en prototipos, imperativo, débilmente tipado y dinámico.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Contenedor 5 Modelo Entidad - Relacion -->
+        <div class="Seccion seccion_2">
+            <h2>Modelo Entidad - Relación</h2>
+            <img src="/Imagenes/modelo.png" style="width: 65%;" class="imagen_centro show_centro" loading="lazy">
+        </div>
+</body>
+<script src="/Scripts/Principal/main.js"></script>
+
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edificios</title>
+    <link rel="shortcut icon" href="/Imagenes/icono.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/Styles/main.css">
+    <link rel="stylesheet" href="/Styles/header.css">
+    <link rel="stylesheet" href="/Styles/edificio.css">
+</head>
+
+<body>
+
+    <%-include('Components/nav.ejs')%>
+
+    <div id="Contenedor_Imagen_Principal">
+        <img src="/Imagenes/Edificio.svg" alt="">
+        <h1 id="Titulo_Pagina">Sección Edificios</h1>
+    </div>
+
+    <div id="Contenedor_Acciones_Pagina">
+        <div>
+            <h3>Servicios</h3>
+        </div>
+        <div>
+            <h3>¿Que puedes realizar en esta pagina?</h3>
+        </div>
+        <div>
+            <div class="acciones">
+                <img src="/Imagenes/agregar_edificio.svg" alt="">
+                <h2>Agregar Edificios</h2>
+                <p>Para agregar un edificio es necesario tener el nombre del edificio que se quiere agregar.</p>
+            </div>
+            <div class="acciones">
+                <img src="/Imagenes/mostrar_edificio.svg" alt="">
+                <h2>Mostrar Edificios</h2>
+                <p>Para mostrar todos los edificios solo se debe presionar el boton mostrar todos los edificios.</p>
+            </div>
+            <div class="acciones">
+                <img src="/Imagenes/buscar_edificio.svg" alt="">
+                <h2>Buscar Edificio</h2>
+                <p>Para buscar un edificio solo se debe colocar el nombre del edificio.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="seccion-formularios" id="Contenedor-Formulario-Agregar">
+        <div>
+            <form class="Formulario">
+                <h1>Agregar Edificio</h1>
+                <label for="nombreEdificioAgregar">Escribe el Nombre del Edificio</label>
+                <input type="text" name="nombreEdificioAgregar" id="nombreEdificioAgregar">
+                <button type="button" id="BtnAgregarEdificio">Agregar</button>
+            </form>
+        </div>
+        <img src="/Imagenes/Formulario_Agregar.svg" alt="">
+    </div>
+
+    <div class="seccion-formularios" id="Contenedor-Formulario-Buscar">
+        <img src="/Imagenes/Formulario_Buscar.svg" alt="">
+        <div>
+            <form class="Formulario">
+                <h1>Buscar Edificio</h1>
+                <label for="nombreEdificio">Escribe el Nombre del Edificio</label>
+                <input type="text" name="nombreEdificio" id="nombreEdificio">
+                <button type="button" id="BtnBuscarEdificio">Buscar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="seccion-resultados">
+        <h1>Resultados</h1>
+        <div class="tabla" id="resultados-formulario-buscar">
+            <div class="titulo-tabla">Id Edificio</div><div class="titulo-tabla">Nombre Edificio</div>
+        </div>
+    </div>
+
+    <div class="seccion-formularios" id="Contenedor-Formulario-Mostrar">
+        <div>
+            <form class="Formulario">
+                <h1>Mostrar Edificios</h1>
+                <button type="button" id="BtnBuscarEdificios">Mostrar</button>
+            </form>
+        </div>
+        <img src="/Imagenes/Formulario_Mostrar.svg" alt="">
+    </div>
+
+    <div class="seccion-resultados">
+        <h1>Resultados</h1>
+            <div class="tabla" id="resultados-formulario-mostrar">
+                <div class="titulo-tabla">Id Edificio</div><div class="titulo-tabla">Nombre Edificio</div>
+        </div>
+    </div>
+
+</body>
+
+<script src="/sweetalert2/sweetalert2.all.min.js"></script>
+
+<script>
+    var BtnBuscarEdificio = document.getElementById('BtnBuscarEdificio')
+    var BtnBuscarEdificios = document.getElementById('BtnBuscarEdificios')
+    var BtnAgregarEdificio = document.getElementById('BtnAgregarEdificio')
+
+    BtnBuscarEdificios.addEventListener('click', async () => {
+        var mostrar_resultados = document.getElementById('resultados-formulario-mostrar')
+        mostrar_resultados.innerHTML = '<div class="titulo-tabla">Id Edificio</div><div class="titulo-tabla">Nombre Edificio</div>'
+        try {
+            var solicitud = await fetch('/getEdificios', { method: "POST" })
+            var respuesta = await solicitud.json();
+            for( let edificio of respuesta ){
+                Object.keys( edificio ).forEach( key => {
+                    let div = document.createElement('div')
+                    div.innerText = edificio[key]
+                    mostrar_resultados.append( div )
+                });
+            }
+            Swal.fire({ icon: 'success', title: 'Edificios encontrados', showConfirmButton: false, timer: 1500 })
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Ocurrio un error al buscar los edificios', showConfirmButton: false, timer: 1500 })
+            console.log(error);
+        }
+    })
+
+    BtnBuscarEdificio.addEventListener('click', async () => {
+        let n = document.getElementById('nombreEdificio').value
+        if( n.length == 0 ){
+            Swal.fire({ icon: 'warning', title: 'Se debe agregar un dato en el input', showConfirmButton: false, timer: 1500 })
+            return
+        }
+        var form = new FormData()
+        form.append('nombreEdificio', n )
+        var mostrar_resultados = document.getElementById('resultados-formulario-buscar')
+        mostrar_resultados.innerHTML = '<div class="titulo-tabla">Id Edificio</div><div class="titulo-tabla">Nombre Edificio</div>'
+
+        try {
+            var solicitud = await fetch('/getEdificio', {
+                method: "POST",
+                body: new URLSearchParams(form),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            })
+            var respuesta = await solicitud.json()
+            if( respuesta.error ){
+                Swal.fire({ icon: 'error', title: 'No esta registrado el edificio', showConfirmButton: false, timer: 1500 })
+                return
+            }
+            Object.keys( respuesta ).forEach( key => {
+                let div = document.createElement('div')
+                div.innerText = respuesta[key]
+                mostrar_resultados.append( div )
+            })
+            Swal.fire({ icon: 'success', title: 'Edificio encontrado', showConfirmButton: false, timer: 1500 })
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Ocurrio un error al buscar el edificio', showConfirmButton: false, timer: 1500 })
+            console.log(error);
+        }
+    })
+
+    BtnAgregarEdificio.addEventListener('click', async () => {
+        var form = new FormData()
+        form.append('nombreEdificio', document.getElementById('nombreEdificioAgregar').value )
+        try {
+            var solicitud = await fetch('/addEdificio', {
+                method: "POST",
+                body: new URLSearchParams(form),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            });
+            var respuesta = await solicitud.json();
+            console.log(respuesta);
+            Swal.fire({ icon: 'success', title: 'Se agrego el edificio', showConfirmButton: false, timer: 1500 })
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Ocurrio un error al agregar el Edificio', showConfirmButton: false, timer: 1500 })
+            console.log(error);
+        }
+    })
+
+</script>
+
+</html>

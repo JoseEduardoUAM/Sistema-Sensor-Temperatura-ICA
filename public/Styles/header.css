@@ -1,0 +1,65 @@
+html, body{
+    margin: 0px;
+    padding: 0px;
+}
+
+header{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    background-color: rgb(53, 53, 53);
+}
+
+#SeccionLogo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#SeccionLogo a{
+    outline: none;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#SeccionLogo a img{
+    height: 35px;
+    margin-left: 25px;
+}
+
+#SeccionLogo a h1{
+    margin: 0px 0px 0px 10px;
+    font-size: 20px;
+    color: #fff;
+    font-family: var(--text-secundario);
+}
+
+#Secciones{
+    display: flex;
+    margin-right: 5px;
+}
+
+#Secciones a:hover{
+    background-color: #fff;
+    color: #000;
+}
+
+#Secciones a{
+    width: 130px;
+    height: 65px;
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #fff;
+    font-family: var(--text-secundario);
+} 

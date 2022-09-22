@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espacios</title>
+    <link rel="shortcut icon" href="/Imagenes/icono.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/Styles/main.css">
+    <link rel="stylesheet" href="/Styles/header.css">
+    <link rel="stylesheet" href="/Styles/espacio.css">
+</head>
+
+<body>
+
+    <%-include('Components/nav.ejs')%>
+
+    <div id="Contenedor_Imagen_Principal">
+        <h1 id="Titulo_Pagina">Sección Espacios</h1>
+        <img src="/Imagenes/Espacio.svg" alt="">
+    </div>
+
+    <div id="Contenedor_Acciones_Pagina">
+        <div>
+            <h3>Servicios</h3>
+        </div>
+        <div>
+            <h3>¿Que puedes realizar en esta sección?</h3>
+        </div>
+        <div>
+            <div class="acciones">
+                <img src="/Imagenes/agregar_espacio.svg" alt="">
+                <h2>Agregar Espacios</h2>
+                <p>Para agregar un espacio es necesario tener el nombre del espacio que se quiere agregar.</p>
+            </div>
+            <div class="acciones">
+                <img src="/Imagenes/mostrar_espacio.svg" alt="">
+                <h2>Mostrar Espacios</h2>
+                <p>Para mostrar todos los departamentos solo se debe presionar el boton mostrar todos los departamentos.</p>
+            </div>
+            <div class="acciones">
+                <img src="/Imagenes/buscar_espacio.svg" alt="">
+                <h2>Buscar Espacio</h2>
+                <p>Para buscar un espacio solo se debe colocar el nombre del espacio.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="seccion-formularios" id="Contenedor-Formulario-Agregar">
+        <div>
+            <form class="Formulario">
+                <h1>Agregar Espacio</h1>
+                <label for="nombreEspacioAgregar">Escribe el Nombre del Espacio</label>
+                <input type="text" name="nombreEspacioAgregar" id="nombreEspacioAgregar">
+
+                <label for="numeroEspacioAgregar">Escribe el numero del espacio</label>
+                <input type="text" name="numeroEspacioAgregar" id="numeroEspacioAgregar">
+
+                <label for="descripcionEspacioAgregar">Escribe la descripcion del espacio</label>
+                <input type="text" name="descripcionEspacioAgregar" id="descripcionEspacioAgregar">
+
+                <label for="idProfesor">Selecciona el Profesor:</label>
+                <select name="idProfesor" id="idProfesor">
+                    <% for( let profesor of profesores ){ %>
+                        <option value = '<%- profesor.idProfesor %>'><%- profesor.nombre %></option >
+                    <% } %>
+                </select>
+
+                <label for="idEdificio">Selecciona el Edificio:</label>
+                <select name="idEdificio" id="idEdificio">
+                    <% for( let edificio of edificios ){ %>
+                        <option value = '<%- edificio.idEdificio %>'><%- edificio.nombre %></option >
+                    <% } %>
+                </select>
+                <button type="button" id="BtnAgregarEspacio">Agregar</button>
+            </form>
+        </div>
+        <img src="/Imagenes/Formulario_Agregar.svg" alt="">
+    </div>
+
+    <div class="seccion-formularios" id="Contenedor-Formulario-Buscar">
+        <img src="/Imagenes/Formulario_Buscar.svg" alt="">
+        <div>
+            <form class="Formulario">
+                <h1>Buscar Espacio</h1>
+                <label for="nombreEspacio">Escribe el Nombre del Espacio</label>
+                <input type="text" name="nombreEspacio" id="nombreEspacio">
+                <button type="button" id="BtnBuscarEspacio">Buscar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="seccion-resultados">
+        <h1>Resultados</h1>
+        <div class="tabla" id="resultados-formulario-buscar">
+            <div class="titulo-tabla">Id Espacio</div>
+            <div class="titulo-tabla">Nombre Espacio</div>
+            <div class="titulo-tabla">Numero</div>
+            <div class="titulo-tabla"></div>
+        </div>
+    </div>
+
+    <div class="seccion-formularios" id="Contenedor-Formulario-Mostrar">
+        <div>
+            <form class="Formulario">
+                <h1>Mostrar Espacios</h1>
+                <button type="button" id="BtnBuscarEspacios">Mostrar</button>
+            </form>
+        </div>
+        <img src="/Imagenes/Formulario_Mostrar.svg" alt="">
+    </div>
+
+    <div class="seccion-resultados">
+        <h1>Resultados</h1>
+            <div class="tabla" id="resultados-formulario-mostrar">
+            <div class="titulo-tabla">Id Espacio</div>
+            <div class="titulo-tabla">Nombre Espacio</div>
+            <div class="titulo-tabla">Numero</div>
+            <div class="titulo-tabla"></div>
+        </div>
+    </div>
+
+</body>
+
+<script src="/sweetalert2/sweetalert2.all.min.js"></script>
+
+<script>
+    var BtnBuscarEspacio = document.getElementById('BtnBuscarEspacio')
+    var BtnBuscarEspacios = document.getElementById('BtnBuscarEspacios')
+    var BtnAgregarEspacio = document.getElementById('BtnAgregarEspacio')
+
+    BtnBuscarEspacios.addEventListener('click', async () => {
+        var mostrar_resultados = document.getElementById('resultados-formulario-mostrar')
+        mostrar_resultados.innerHTML = `
+            <div class="titulo-tabla">Id Espacio</div> <div class="titulo-tabla">Nombre Espacio</div>
+            <div class="titulo-tabla">Numero</div> <div class="titulo-tabla"></div>
+        `
+        try {
+            var solicitud = await fetch('/getEspacios', { method: "POST" })
+            var respuesta = await solicitud.json();
+            for( let espacio of respuesta ){
+                let datos = [ 
+                    espacio.idEspacio , 
+                    espacio.nombre , 
+                    espacio.numero
+                ]
+                datos.forEach( x => {
+                    let div = document.createElement('div')
+                    div.innerText = x
+                    mostrar_resultados.append( div )
+                })
+                let div = document.createElement('div')
+                div.innerHTML = `<a href="./Espacio?idEspacio=${ espacio.idEspacio }">Entrar</a>`
+                mostrar_resultados.append( div )
+            }
+            Swal.fire({ icon: 'success', title: 'Espacios encontrados', showConfirmButton: false, timer: 1500 })
+        } catch (error) {
+            console.log(error);
+            Swal.fire({ icon: 'error', title: 'Ocurrio un error al buscar los espacios', showConfirmButton: false, timer: 1500 })
+
+        }
+    })
+
+    BtnBuscarEspacio.addEventListener('click', async () => {
+        let n = document.getElementById('nombreEspacio')
+        if( n.value.length == 0 ){
+            Swal.fire({ icon: 'warning', title: 'Se debe agregar un dato en el input', showConfirmButton: false, timer: 1500 })
+            return
+        }
+        var form = new FormData()
+        form.append('nombreEspacio', n.value )
+        var mostrar_resultados = document.getElementById('resultados-formulario-buscar')
+        mostrar_resultados.innerHTML = `
+            <div class="titulo-tabla">Id Espacio</div> <div class="titulo-tabla">Nombre Espacio</div>
+            <div class="titulo-tabla">Numero</div> <div class="titulo-tabla"></div>
+        `
+        try {
+            var solicitud = await fetch('/getEspacio', {
+                method: "POST",
+                body: new URLSearchParams(form),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            })
+            var respuesta = await solicitud.json();
+            if( respuesta.length == 0 ){
+                Swal.fire({ icon: 'error', title: 'No esta registrado el edificio', showConfirmButton: false, timer: 1500 })
+                n.value = ''
+                return
+            }
+
+            let datos = [ 
+                respuesta[0].idEspacio , 
+                respuesta[0].nombre , 
+                respuesta[0].numero
+            ]
+            datos.forEach( x => {
+                let div = document.createElement('div')
+                div.innerText = x
+                mostrar_resultados.append( div )
+            })
+            let div = document.createElement('div')
+            div.innerHTML = `<a href="./Espacio?idEspacio=${ respuesta[0].idEspacio }">Entrar</a>`
+            mostrar_resultados.append( div )
+            Swal.fire({ icon: 'success', title: 'Espacio encontrado', showConfirmButton: false, timer: 1500 })
+        } catch (error) {
+            console.log(error)
+            Swal.fire({ icon: 'error', title: 'Ocurrio un error al buscar el espacio', showConfirmButton: false, timer: 1500 })
+        }
+    })
+
+    BtnAgregarEspacio.addEventListener('click', async () => {
+        var form = new FormData()
+        let nombre = document.getElementById('nombreEspacioAgregar')
+        let numero = document.getElementById('numeroEspacioAgregar')
+        let descripcion = document.getElementById('descripcionEspacioAgregar')
+        let idProfesor = document.getElementById('idProfesor')
+        let idEdificio = document.getElementById('idEdificio')
+
+
+        if( nombre.value.length == 0 | numero.value.length == 0 | numero.value.length == 0 | 
+            descripcion.value.length == 0 ){
+            Swal.fire({ icon: 'warning', title: 'Se debe agregar datos en los inputs', showConfirmButton: false, timer: 1500 })
+            return
+        }
+
+        form.append('nombreEspacio', nombre.value )
+        form.append('numero', numero.value )
+        form.append('descripcion', descripcion.value )
+        form.append('idProfesor', idProfesor.value )
+        form.append('idEdificio', idEdificio.value )
+        try {
+            var solicitud = await fetch('/addEspacio', {
+                method: "POST",
+                body: new URLSearchParams(form),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            })
+            var respuesta = await solicitud.json();
+            console.log(respuesta);
+            if( respuesta[0].ok == 'ok' ){
+                nombre.value = ''
+                numero.value = ''
+                descripcion.value = ''
+                Swal.fire({ icon: 'success', title: 'Se agrego el espacio', showConfirmButton: false, timer: 1500 })
+                return
+            }
+            Swal.fire({ icon: 'warning', title: 'Ocurrio un error al registrar el espacio', showConfirmButton: false, timer: 1500 })
+        } catch (error) {
+            Swal.fire({ icon: 'warning', title: 'Ocurrio un error al registrar el espacio', showConfirmButton: false, timer: 1500 })
+
+        }
+    })
+
+</script>
+
+</html>

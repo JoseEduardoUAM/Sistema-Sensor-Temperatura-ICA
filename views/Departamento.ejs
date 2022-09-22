@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departamentos</title>
+    <link rel="shortcut icon" href="/Imagenes/icono.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/Styles/main.css">
+    <link rel="stylesheet" href="/Styles/header.css">
+    <link rel="stylesheet" href="/Styles/departamento.css">
+</head>
+
+<body>
+
+    <%-include('Components/nav.ejs')%>
+
+    <div id="Contenedor_Imagen_Principal">
+        <h1 id="Titulo_Pagina">Sección Departamentos</h1>
+        <img src="/Imagenes/Departamento.svg" alt="">
+    </div>
+
+    <div id="Contenedor_Acciones_Pagina">
+        <div>
+            <h3>Servicios</h3>
+        </div>
+        <div>
+            <h3>¿Que puedes realizar en esta sección?</h3>
+        </div>
+        <div>
+            <div class="acciones">
+                <img src="/Imagenes/agregar_departamento.svg" alt="">
+                <h2>Agregar Departamentos</h2>
+                <p>Para agregar un departamento es necesario tener el nombre del departamento que se quiere agregar.</p>
+            </div>
+            <div class="acciones">
+                <img src="/Imagenes/mostrar_departamento.svg" alt="">
+                <h2>Mostrar Departamentos</h2>
+                <p>Para mostrar todos los departamentos solo se debe presionar el boton mostrar todos los departamentos.</p>
+            </div>
+            <div class="acciones">
+                <img src="/Imagenes/buscar_departamento.svg" alt="">
+                <h2>Buscar Departamento</h2>
+                <p>Para buscar un departamento solo se debe colocar el nombre del departamento.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="seccion-formularios" id="Contenedor-Formulario-Agregar">
+        <div>
+            <form class="Formulario">
+                <h1>Agregar Departamento</h1>
+                <label for="nombreDepartamentoAgregar">Escribe el Nombre del Departamento</label>
+                <input type="text" name="nombreDepartamentoAgregar" id="nombreDepartamentoAgregar">
+                <button type="button" id="BtnAgregarDepartamento">Agregar</button>
+            </form>
+        </div>
+        <img src="/Imagenes/Formulario_Agregar.svg" alt="">
+    </div>
+
+    <div class="seccion-formularios" id="Contenedor-Formulario-Buscar">
+        <img src="/Imagenes/Formulario_Buscar.svg" alt="">
+        <div>
+            <form class="Formulario">
+                <h1>Buscar Departamento</h1>
+                <label for="nombreDepartamento">Escribe el Nombre del Departamento</label>
+                <input type="text" name="nombreDepartamento" id="nombreDepartamento">
+                <button type="button" id="BtnBuscarDepartamento">Buscar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="seccion-resultados">
+        <h1>Resultados</h1>
+        <div class="tabla" id="resultados-formulario-buscar">
+            <div class="titulo-tabla">Id Departamento</div><div class="titulo-tabla">Nombre Departamento</div>
+        </div>
+    </div>
+
+    <div class="seccion-formularios" id="Contenedor-Formulario-Mostrar">
+        <div>
+            <form class="Formulario">
+                <h1>Mostrar Departamentos</h1>
+                <button type="button" id="BtnBuscarDepartamentos">Mostrar</button>
+            </form>
+        </div>
+        <img src="/Imagenes/Formulario_Mostrar.svg" alt="">
+    </div>
+
+    <div class="seccion-resultados">
+        <h1>Resultados</h1>
+            <div class="tabla" id="resultados-formulario-mostrar">
+                <div class="titulo-tabla">Id Departamento</div><div class="titulo-tabla">Nombre Departamento</div>
+        </div>
+    </div>
+
+</body>
+
+<script src="/sweetalert2/sweetalert2.all.min.js"></script>
+<script>
+    var BtnBuscarDepartamento = document.getElementById('BtnBuscarDepartamento')
+    var BtnBuscarDepartamentos = document.getElementById('BtnBuscarDepartamentos')
+    var BtnAgregarDepartamento = document.getElementById('BtnAgregarDepartamento')
+
+    BtnBuscarDepartamentos.addEventListener('click', async () => {
+        var form = new FormData()
+        var mostrar_resultados = document.getElementById('resultados-formulario-mostrar')
+        mostrar_resultados.innerHTML = '<div class="titulo-tabla">Id Departamento</div><div class="titulo-tabla">Nombre Departamento</div>'
+        try {
+            var solicitud = await fetch('/getDepartamentos', { method: "POST" })
+            var respuesta = await solicitud.json()
+            for( let departamento of respuesta ){
+                Object.keys( departamento ).forEach( key => {
+                    let div = document.createElement('div')
+                    div.innerText = departamento[key]
+                    mostrar_resultados.append( div )
+                })
+            }
+            Swal.fire({ icon: 'success', title: 'Departamentos encontrados', showConfirmButton: false, timer: 1500 })
+        } catch (error) {
+            console.log(error);
+            Swal.fire({ icon: 'error', title: 'Ocurrio un error al mostrar los departamentos !!!', showConfirmButton: false, timer: 1500 })
+        }
+    })
+
+    BtnBuscarDepartamento.addEventListener('click', async () => {
+        let n = document.getElementById('nombreDepartamento')
+        if( n.value.length == 0 ){
+            Swal.fire({ icon: 'warning', title: 'Se debe agregar un dato en el input', showConfirmButton: false, timer: 1500 })
+            return
+        }
+        var form = new FormData()
+        form.append('nombreDepartamento', n.value )
+        var mostrar_resultados = document.getElementById('resultados-formulario-buscar')
+        mostrar_resultados.innerHTML = '<div class="titulo-tabla">Id Departamento</div><div class="titulo-tabla">Nombre Departamento</div>'
+        try {
+            var solicitud = await fetch('/getDepartamento', {
+                method: "POST",
+                body: new URLSearchParams(form),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            })
+            var respuesta = await solicitud.json()
+            console.log( respuesta );
+            if( respuesta.length == 0 ){
+                Swal.fire({ icon: 'error', title: 'No esta registrado el Departamento', showConfirmButton: false, timer: 1500 })
+                n.value = ''
+                return
+            }
+            Object.keys( respuesta[0] ).forEach( key => {
+                let div = document.createElement('div')
+                div.innerText = respuesta[0][key]
+                mostrar_resultados.append( div )
+            })
+            Swal.fire({ icon: 'success', title: 'Departamento encontrado', showConfirmButton: false, timer: 1500 })
+        } catch (error) {
+            console.log(error);
+            Swal.fire({ icon: 'error', title: 'Ocurrio un error al mostrar los departamentos!!!', showConfirmButton: false, timer: 1500 })
+        }
+    })
+
+    BtnAgregarDepartamento.addEventListener('click', async () => {
+        var form = new FormData()
+        let d = document.getElementById('nombreDepartamentoAgregar')
+        if( d.value.length == 0 ){
+            Swal.fire({ icon: 'warning', title: 'Se debe agregar un dato en el input', showConfirmButton: false, timer: 1500 })
+            return
+        }
+        form.append('nombreDepartamento', d.value )
+        try {
+            var solicitud = await fetch('/addDepartamento', {
+                method: "POST",
+                body: new URLSearchParams(form),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            })
+            var respuesta = await solicitud.json()
+            if( respuesta[0].ok == 'ok' ){
+                d.value = ''
+                Swal.fire({ icon: 'success', title: 'Se agrego el departamento', showConfirmButton: false, timer: 1500 })
+                return
+            }
+            Swal.fire({ icon: 'warning', title: 'Ocurrio un error al registrar el departamento', showConfirmButton: false, timer: 1500 })
+        } catch (error) {
+            Swal.fire({ icon: 'warning', title: 'Ocurrio un error al registrar el departamento', showConfirmButton: false, timer: 1500 })
+
+        }
+    })
+
+</script>
+
+</html>

@@ -1,0 +1,204 @@
+#Contenedor_Imagen_Principal{
+    width: 100%;
+    display: flex;
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+    box-sizing: border-box;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#Contenedor_Imagen_Principal h1:nth-child(1){
+    width: 40%;
+    font-size: 40px;
+    color: #fff;
+}
+
+#Contenedor_Imagen_Principal img:nth-child(2){
+    width: 30%;
+    margin: 15px;
+}
+
+#Titulo_Pagina{
+    margin: 0px;
+    font-size: 35px;  
+    font-family: var(--text-secundario);
+}
+
+#Contenedor_Acciones_Pagina{
+    width: 100%;
+    height: auto;
+    background-color: rgb(240, 248, 247);
+    display: flex;
+    flex-direction: column;
+}
+
+#Contenedor_Acciones_Pagina > div:nth-child(1) > h3{
+    color: #a1c4fd;
+    text-align: center;
+    font-family: var(--text-principal);
+    font-size: 25px;
+    margin: 10px 0px 0px 0px;
+}
+
+#Contenedor_Acciones_Pagina div:nth-child(2)  h3:nth-child(1){
+    text-align: center;
+    font-family: var(--text-principal);
+    font-size: 30px;
+    margin: 0px;
+}
+
+#Contenedor_Acciones_Pagina > div:nth-child(3){
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-evenly;
+}
+
+.acciones{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.acciones img{
+    width: 30%;
+}
+
+.acciones h2{
+    font-family: var(--text-principal);
+    color: black;
+    margin: 10px 0px 0px 0px;
+}
+
+.acciones p{
+    font-family: var(--text-secundario);
+    margin: 0px 0px 15px 0px;
+    text-align: center;
+}
+
+.seccion-formularios{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+}
+
+#Contenedor-Formulario-Agregar{
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+}
+
+#Contenedor-Formulario-Buscar{
+    background-image: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%);
+}
+
+#Contenedor-Formulario-Mostrar{
+    background-image: linear-gradient(to top, #9890e3 0%, #b1f4cf 100%);
+}
+
+.seccion-formularios > img{
+    width: 15%;
+    margin: 30px;
+}
+
+.seccion-formularios > div{
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Formulario{
+    width: 80%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 25px;
+}
+
+.Formulario > h1:nth-child(1){
+    text-align: center;
+    font-family: var(--text-secundario);
+    margin: 5px 0px 20px 0px;
+}
+
+.Formulario > label{
+    font-family: var(--text-secundario);
+    margin: 0px 0px 10px 0px;
+}
+
+.Formulario > input , .Formulario > select{
+    width: 70%;
+    padding: 5px;
+    font-family: var(--text-secundario);
+    margin: 0px 0px 10px 0px;
+}
+
+.Formulario > button{
+    width: 40%;
+    padding: 5px;
+    background-color: #84fab0;
+    font-family: var(--text-principal);
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    margin: 0px 0px 15px 0px;
+}
+
+.Formulario > button:nth-child(2){
+    width: 40%;
+    padding: 5px;
+    background-color: #84fab0;
+    font-family: var(--text-principal);
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    margin: 0px 0px 15px 0px;
+}
+
+.seccion-resultados{
+    width: 100%;
+    height: auto;
+    display: flex;
+    background-color: rgb(240, 248, 247);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.seccion-resultados h1:nth-child(1){
+    margin: 10px 0px;
+    font-family: var(--text-secundario);
+}
+
+.tabla{
+    width: 95%;
+    height: 150px;
+    overflow: auto;
+    background-color: #fff;
+    padding: 5px;
+    margin: 10px 0px;
+    display: grid;
+    grid-template-columns: repeat( 4 , 1fr );
+    grid-auto-rows: 45px;
+    border: 0.5px solid #ccc;
+}
+
+.tabla div{
+    text-align: center;
+    font-family: var(--text-secundario);
+    border-bottom: 0.5px solid #ccc;
+    padding: 5px;
+    color: #000;
+    font-size: 12px;
+}
+
+.titulo-tabla{
+    font-family: var(--text-principal);
+    font-size: 15px;
+    font-weight: 800;
+}
+

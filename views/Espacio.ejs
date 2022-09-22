@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> <%- espacio.nombre %> </title>
+    <link rel="shortcut icon" href="/Imagenes/icono.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/Styles/main.css">
+    <link rel="stylesheet" href="/Styles/header.css">
+    <link rel="stylesheet" href="/Styles/EstadisticasEspacio.css">
+
+</head>
+
+<body>
+
+    <%-include('Components/nav.ejs')%>
+
+    <main>
+        <div class="Contenedor">
+            <h1><%- espacio.nombre %></h1>
+            <h2> Descripción </h2>
+            <p>
+                <%- espacio.descripcion %>
+            </p>
+            <p> Numero : <%- espacio.numero %> </p>
+
+            <h2> Grafica Temperatura </h2>
+            <canvas id="GraficaTemperatura" height="400px" style="margin-bottom: 40px;"></canvas>
+            <h2> Grafica De Indice de Calidad del Aire </h2>
+            <canvas id="GraficaAire" height="400px" style="margin-bottom: 40px;"></canvas>
+        </div>
+    </main>
+
+
+</body>
+
+<script src="/socket.io/socket.io.js" charset="utf-8"></script>
+<script src="/Chart/dist/chart.js"></script>
+
+<script>
+    const socket = io()
+
+    var labels = [];
+
+    /*Grafica Lineas*/
+    var dataLineas = null
+    var configTemperatura = null
+    var GraficaTemperatura = null
+
+    /*Grafica Burbuja*/
+    var dataBurbuja = null
+    var configBurbuja = null
+    var GraficaBurbuja = null
+
+    /*Colores*/
+    const colores = [
+        { backgroundColor : 'rgb(196, 50, 50)' , borderColor : 'rgba(196, 50, 50, 0.6)' },
+        { backgroundColor : 'rgb(68, 76, 179)' , borderColor : 'rgba(68, 75, 179, 0.6)' },
+        { backgroundColor : 'rgb(57, 134, 70)' , borderColor : 'rgba(57, 134, 70, 0.6)' },
+        { backgroundColor : 'rgb(204, 212, 86)' , borderColor : 'rgba(204, 212, 86, 0.6)' }
+    ]
+
+    socket.emit('solicitarDatosEspacio', '<%=espacio.idEspacio%>')
+
+    socket.on('obtenerDatosEspacio', (datos) => {
+        let datasets = []
+        console.log( datos );
+        for( let i = 0 ; i < datos.nodos.length ; i++ ){
+            let linea = {
+                label: `Temperatura Nodo ${datos.nodos[i].idNodo}`,
+                backgroundColor: colores[i].backgroundColor,
+                borderColor: colores[i].borderColor,
+                data: []
+            }
+            datasets.push(linea)
+        }
+        dataLineas = { labels, datasets }
+        configTemperatura = { type: 'line', data: dataLineas }
+        GraficaTemperatura = new Chart(document.getElementById('GraficaTemperatura'), configTemperatura)
+
+        let datasetsBurbuja = []
+
+        for( let i = 0 ; i < datos.nodos.length ; i++ ){
+            let burbuja = {
+                label: `Sensor ${datos.nodos[i].idNodo}`,
+                backgroundColor: colores[i].borderColor,
+                data: []
+            }
+            datasetsBurbuja.push(burbuja)
+        }
+        dataBurbuja = { labels, datasets: datasetsBurbuja }
+        configBurbuja = {
+            type: 'bubble',
+            data: dataBurbuja,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Grafica de Indice de Calidad del Aire'
+                    }
+                }
+            }
+        }
+        GraficaBurbuja = new Chart( document.getElementById('GraficaAire'), configBurbuja )
+    })
+
+    socket.on('mostrarEstadisticas_Espacio<%=espacio.idEspacio%>', (datos) => {
+        let fecha = new Date().toDateString()
+        labels.push(fecha)
+        for (let i = 0; i < datos.data.length; i++) {
+            dataLineas.datasets[i].data.push(datos.data[i].temp)
+            if( datos.data[i].ica <= 100 )
+                dataBurbuja.datasets[i].data.push( { x : datos.data[i].posx , y : datos.data[i].posy , r : 5 } )
+            else if( datos.data[i].ica <= 200 )
+                dataBurbuja.datasets[i].data.push( { x : datos.data[i].posx , y : datos.data[i].posy , r : 15 } )
+            else if( datos.data[i].ica <= 300 )
+                dataBurbuja.datasets[i].data.push( { x : datos.data[i].posx , y : datos.data[i].posy , r : 25 } )
+            else if( datos.data[i].ica <= 400 )
+                dataBurbuja.datasets[i].data.push( { x : datos.data[i].posx , y : datos.data[i].posy , r : 35 } )
+            else
+                dataBurbuja.datasets[i].data.push( { x : datos.data[i].posx , y : datos.data[i].posy , r : 45 } )
+        }
+        GraficaTemperatura.update();
+        GraficaBurbuja.update();
+    })
+
+</script>
+
+</html>
